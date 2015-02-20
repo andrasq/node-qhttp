@@ -1,3 +1,10 @@
+/**
+ * Copyright (C) 2015 Andras Radics
+ * Licensed under the Apache License, Version 2.0
+ */
+
+'use strict';
+
 var http_build_query = require('../http_build_query');
 
 function buildObject( name, value ) {
@@ -85,7 +92,7 @@ module.exports = {
     },
 
     'should output only defined array elements': function(t) {
-        x = [0,1,2,4];
+        var x = [0,1,2,4];
         delete(x[0]);
         delete(x[3]);
         t.equal("x1=1&x2=2", http_build_query(x, {numeric_prefix: 'x'}));
