@@ -79,6 +79,9 @@ make a web request
 - `body` (optional) - the message to send in the body of the request
 - `callback` - function that will be called with the `http.IncomingMessage` response
 
+Returns via the callback the http response, with res.body set to a Buffer
+containing the raw unparsed reply message.
+
 The `body` may be a string, an object, or a Buffer.  String is sent as
 content-type 'text/plain'.  Object is json-encoded and sent as
 'application/json'.  Buffer is sent as binary data as type
@@ -87,3 +90,4 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 
 ## Todo
 
+- maybe have httpClient support streaming responses
