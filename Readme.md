@@ -31,7 +31,7 @@ In particular, it handles nested objects and nested arrays.
 options:
 
 - `arg_separator`   default '&'
-- `eq_sign1`        default '='
+- `eq_sign`         default '='
 - `numeric_prefix`  string to prepend to numeric keys
 - `encoding`        'PHP_QUERY_RFC1738' (default) encodes spaces as '+',
                     'PHP_QUERY_RFC3986' encodes spaces as '%20'
