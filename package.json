@@ -1,6 +1,6 @@
 {
   "name": "qhttp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "useful http utils",
   "license": "Apache-2.0",
   "repository": {
