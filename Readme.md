@@ -30,12 +30,12 @@ In particular, it handles nested objects and nested arrays.
 
 options:
 
-        arg_separator   '&'
-        eq_sign         '='
-        numeric_prefix  string to prepend to numeric keys
-        encoding        'PHP_QUERY_RFC1738' (default) - encode spaces as '+'
-                        'PHP_QUERY_RFC3986' - encode spaces as '%20'
-        leave_brackets  encode {a:[3]} as "a[0]=3" and not "a%5B0%5D=3"
+- `arg_separator`   default '&'
+- `eq_sign1`        default '='
+- `numeric_prefix`  string to prepend to numeric keys
+- `encoding`        'PHP_QUERY_RFC1738' (default) encodes spaces as '+',
+                    'PHP_QUERY_RFC3986' encodes spaces as '%20'
+- `leave_brackets`  encode `{a:[3]}` as "a[0]=3" and not "a%5B0%5D=3"
 
 
 ### http_parse_query( string )
@@ -91,3 +91,4 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 ## Todo
 
 - maybe have httpClient support streaming responses
+- `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
