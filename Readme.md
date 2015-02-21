@@ -9,7 +9,7 @@ Included
 - `http_build_query` - convert parameter hashes to query strings
 - `http_parse_query` - convert query strings to parameter hashes
 - `HttpClient` - simple little web request caller
-- tbd: `HttpAgent` - fast drop-in replacement for `http.Agent` with working keepAlive connection reuse
+- `HttpAgent` - TODO: fast drop-in replacement for `http.Agent` with working keepAlive connection reuse
 
         npm install qhttp
         npm test qhttp
