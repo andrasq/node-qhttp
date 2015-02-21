@@ -4,6 +4,13 @@ qhttp
 
 A few useful http utilities for making web requests.
 
+Included
+
+- `http_build_query` - convert parameter hashes to query strings
+- `http_parse_query` - convert query strings to parameter hashes
+- `HttpClient` - simple little web request caller
+- tbd: `HttpAgent` - fast drop-in replacement for `http.Agent` with working keepAlive connection reuse
+
         npm install qhttp
         npm test qhttp
 
@@ -28,14 +35,14 @@ In particular, it handles nested objects and nested arrays.
         var queryString = http_build_query(params, {numeric_prefix: 'idx'});
         // => "idx0=1&idx1=2&idx2=3"
 
-options:
+Options:
 
-- `arg_separator`   default '&'
-- `eq_sign`         default '='
-- `numeric_prefix`  string to prepend to numeric keys
-- `encoding`        'PHP_QUERY_RFC1738' (default) encodes spaces as '+',
+- `arg_separator`   - default '&'
+- `eq_sign`         - default '='
+- `numeric_prefix`  - string to prepend to numeric keys
+- `encoding`        - 'PHP_QUERY_RFC1738' (default) encodes spaces as '+',
                     'PHP_QUERY_RFC3986' encodes spaces as '%20'
-- `leave_brackets`  encode `{a:[3]}` as "a[0]=3" and not "a%5B0%5D=3"
+- `leave_brackets`  - encode `{a:[3]}` as "a[0]=3" and not "a%5B0%5D=3"
 
 
 ### http_parse_query( string )
@@ -92,3 +99,4 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 
 - maybe have httpClient support streaming responses
 - `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
+- move HttpAgent here
