@@ -4,4 +4,5 @@ module.exports.http_parse_query = require('./http_parse_query');
 // and urldecode
 
 module.exports.HttpClient = require('./http-client');
-// and emulateRestifyClient
+module.exports.emulateRestifyClient = require('./http-client').emulateRestifyClient;
+

@@ -65,15 +65,31 @@ Currently `a[0]=1&a[1]=2` parses a into the object `{'0':1, '1':2}` and not
 `[1, 2]`.  This is not symmetric with http_build_query() behavior.
 
 
-### new HttpClient( )
+### new HttpClient( options )
 
 web request runner, built on top of `http.request`
+
+Options
+
+- `url` - base url to call.  A call to a bare path `/rest/path` will be appended to the base url
+- `headers` - headers to pass to each request.  Additional headers may be passed each call
+- `request` - http request function.  Default is `http.request`
+- `srequest` - https request function.  Default is `https.request`
+
+The options are passed to `request()`, so in addition to the above HttpClient
+options, `request` options are also allowed.
+
+Notable request options:
+
+- `agent` - the http agent to use with `request`.  Default is `http.globalAgent`
+
+Example
 
         HttpClient = require('qhttp/http-client');
         httpClient = new HttpClient();
         httpClient.call('GET', "http://www.google.com", function(err, res) {
             // res.statusCode is HTTP response status code
-            // res.body is the HTTP response body
+            // res.body is the HTTP response body, in a Buffer
         });
 
 
@@ -86,7 +102,7 @@ make a web request
 - `body` (optional) - the message to send in the body of the request
 - `callback` - function that will be called with the `http.IncomingMessage` response
 
-Returns via the callback the http response, with res.body set to a Buffer
+Returns via the callback the http response, with `res.body` set to a Buffer
 containing the raw unparsed reply message.
 
 The `body` may be a string, an object, or a Buffer.  String is sent as
@@ -94,9 +110,36 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 'application/json'.  Buffer is sent as binary data as type
 'application/octet-stream'.
 
+### httpClient.emulateRestifyClient( )
+
+Modify the current httpClient object for improved `restify` compatbility.  New
+methods are added, error reporting changes, and the response message is
+decoded into an object.
+
+The methods added to httpClient are
+
+#### httpClient.basicAuth( username, password )
+
+Sign requests with an "Authorization: Basic" header out of username:password
+
+#### httpClient.get( uri, body callback(err, req, res, obj) )
+
+make a GET request
+
+#### httpClient.post( uri, body callback(err, req, res, obj) )
+
+make a POST request
+
+#### httpClient.put( uri, body callback(err, req, res, obj) )
+
+make a PUT request
+
+#### httpClient.delete( uri, body callback(err, req, res, obj) )
+
+make a DELETE request.  For compatbility, can also be called as `del`.
+
 
 ## Todo
 
 - maybe have httpClient support streaming responses
 - `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
-- move HttpAgent here
