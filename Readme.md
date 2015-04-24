@@ -139,6 +139,12 @@ make a PUT request
 make a DELETE request.  For compatbility, can also be called as `del`.
 
 
+## Related Work
+
+- [querystringparser](https://www.npmjs.com/package/querystringparser)
+- [fast-url-parser](https://www.npmjs.com/package/fast-url-parser)
+- [cookieparser](https://www.npmjs.com/package/cookieparser)
+
 ## Todo
 
 - maybe have httpClient support streaming responses
