@@ -110,9 +110,9 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 'application/json'.  Buffer is sent as binary data as type
 'application/octet-stream'.
 
-### httpClient.emulateRestifyClient( )
+### HttpClient.emulateRestifyClient( client )
 
-Modify the current httpClient object for improved `restify` compatbility.  New
+Modify the `client` HttpClient object for improved `restify` compatbility.  New
 methods are added, error reporting changes, and the response message is
 decoded into an object.
 
@@ -149,3 +149,4 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 - maybe have httpClient support streaming responses
 - `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
+- add emulateRestifyClient as an instance method on httpClient objects
