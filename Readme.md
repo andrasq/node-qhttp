@@ -9,7 +9,6 @@ Included
 - `http_build_query` - convert parameter hashes to query strings
 - `http_parse_query` - convert query strings to parameter hashes
 - `HttpClient` - simple little web request caller
-- `HttpAgent` - TODO: fast drop-in replacement for `http.Agent` with working keepAlive
 
         npm install qhttp
         npm test qhttp
@@ -82,7 +81,9 @@ options, `request` options are also allowed.
 Notable request options:
 
 - `agent` - the http agent to use with `request`.  Default is `http.globalAgent`
-
+  See also
+  [agentkeepalive](https://www.npmjs.com/package/agentkeepalive) and
+  [qhttp-agent](https://www.npmjs.com/package/qhttp-agent).
 
 ### httpClient.call( method, uri, [body], callback(err, res) )
 
