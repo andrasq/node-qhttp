@@ -44,15 +44,12 @@ module.exports = {
         t.done();
     },
 
-/**
-TODO:
     'should decode blank field names into arrays': function(t) {
         var str = "a[]=1&a[]=2";
         var params = http_parse_query(str);
         t.deepEqual(params.a, [1, 2]);
         t.done();
     },
-**/
 
     'should decode hierarchical params into object': function(t) {
         var str = "a[i][j][0]=1&a[i][j][1]=2";
@@ -64,14 +61,14 @@ TODO:
     'decode speed 10k 3 flat params': function(t) {
         var i, str = "a=1&b=2&c=3", params;
         for (i=0; i<10000; i++) params = http_parse_query(str);
-        // 530k/s
+        // 550k/s
         t.done();
     },
 
     'decode speed 10k 3 hierarchical params': function(t) {
         var i, str = "a[i]=1&aq[j]=2&a[k]=3", params;
         for (i=0; i<10000; i++) params = http_parse_query(str);
-        // 170k/s
+        // 360k/s
         t.done();
     },
 
