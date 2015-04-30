@@ -83,15 +83,6 @@ Notable request options:
 
 - `agent` - the http agent to use with `request`.  Default is `http.globalAgent`
 
-Example
-
-        HttpClient = require('qhttp/http-client');
-        httpClient = new HttpClient();
-        httpClient.call('GET', "http://www.google.com", function(err, res) {
-            // res.statusCode is HTTP response status code
-            // res.body is the HTTP response body, in a Buffer
-        });
-
 
 ### httpClient.call( method, uri, [body], callback(err, res) )
 
@@ -110,31 +101,38 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 'application/json'.  Buffer is sent as binary data as type
 'application/octet-stream'.
 
+        HttpClient = require('qhttp/http-client');
+        httpClient = new HttpClient();
+        httpClient.call('GET', "http://www.google.com", function(err, res) {
+            // res.statusCode is HTTP response status code
+            // res.body is the HTTP response body, in a Buffer
+        });
+
 ### HttpClient.emulateRestifyClient( client )
 
 Modify the `client` HttpClient object for improved `restify` compatbility.  New
 methods are added, error reporting changes, and the response message is
 decoded into an object.
 
-The methods added to httpClient are
+The methods added to httpClient are:
 
 #### httpClient.basicAuth( username, password )
 
 Sign requests with an "Authorization: Basic" header out of username:password
 
-#### httpClient.get( uri, body callback(err, req, res, obj) )
+#### httpClient.get( uri, body, callback(err, req, res, obj) )
 
 make a GET request
 
-#### httpClient.post( uri, body callback(err, req, res, obj) )
+#### httpClient.post( uri, body, callback(err, req, res, obj) )
 
 make a POST request
 
-#### httpClient.put( uri, body callback(err, req, res, obj) )
+#### httpClient.put( uri, body, callback(err, req, res, obj) )
 
 make a PUT request
 
-#### httpClient.delete( uri, body callback(err, req, res, obj) )
+#### httpClient.delete( uri, body, callback(err, req, res, obj) )
 
 make a DELETE request.  For compatbility, can also be called as `del`.
 
