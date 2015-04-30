@@ -140,9 +140,12 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 ## Related Work
 
-- [querystringparser](https://www.npmjs.com/package/querystringparser)
-- [fast-url-parser](https://www.npmjs.com/package/fast-url-parser)
+- [querystringparser](https://www.npmjs.com/package/querystringparser) - like qs, but much faster
+- [fast-url-parser](https://www.npmjs.com/package/fast-url-parser) - like url.parse, but 2x faster
 - [cookieparser](https://www.npmjs.com/package/cookieparser)
+- [agentkeepalive](https://www.npmjs.com/package/agentkeepalive - like httpAgent, but much faster
+- [qhttp-agent](https://www.npmjs.com/package/qhttp-agent) - much faster httpAgent work-alike
+
 
 ## Todo
 
