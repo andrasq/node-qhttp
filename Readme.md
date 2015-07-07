@@ -71,7 +71,7 @@ web request runner, built on top of `http.request`
 Options
 
 - `url` - base url to call.  A call to a bare path `/rest/path` will be appended to the base url
-- `headers` - headers to pass to each request.  Additional headers may be passed each call
+- `headers` - headers to pass to each request.  Additional headers may be passed at call time
 - `request` - http request function.  Default is `http.request`
 - `srequest` - https request function.  Default is `https.request`
 
@@ -83,7 +83,8 @@ Notable request options:
 - `agent` - the http agent to use with `request`.  Default is `http.globalAgent`
   See also
   [agentkeepalive](https://www.npmjs.com/package/agentkeepalive) and
-  [qhttp-agent](https://www.npmjs.com/package/qhttp-agent).
+  [qhttp-agent](https://www.npmjs.com/package/qhttp-agent) for faster,
+  more predictable connection agents.
 
 ### httpClient.call( method, uri, [body], callback(err, res) )
 
@@ -105,7 +106,7 @@ content-type 'text/plain'.  Object is json-encoded and sent as
         HttpClient = require('qhttp/http-client');
         httpClient = new HttpClient();
         httpClient.call('GET', "http://www.google.com", function(err, res) {
-            // res.statusCode is HTTP response status code
+            // res.statusCode is the HTTP response status code
             // res.body is the HTTP response body, in a Buffer
         });
 
