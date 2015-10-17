@@ -111,6 +111,7 @@ content-type 'text/plain'.  Object is json-encoded and sent as
         });
 
 ### HttpClient.emulateRestifyClient( client )
+### httpClient.emulateRestifyClient( )
 
 Modify the `client` HttpClient object for improved `restify` compatbility.  New
 methods are added, error reporting changes, and the response message is
@@ -152,4 +153,3 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 - maybe have httpClient support streaming responses
 - `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
-- add emulateRestifyClient as an instance method on httpClient objects
