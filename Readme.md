@@ -158,6 +158,7 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 - HttpClient:
   - returnBody:false option to not wait for response to arrive
   - auth: options for http basic auth
+  - `defaults()` factory method
 
 0.2.2
   - return body as third arg of callback

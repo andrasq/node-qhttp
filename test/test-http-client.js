@@ -34,6 +34,12 @@ module.exports = {
         t.done();
     },
 
+    'defaults factory method should construct client': function(t) {
+        var client = HttpClient.defaults({});
+        t.ok(client instanceof HttpClient);
+        t.done();
+    },
+
     'response should include Buffer body': function(t) {
         t.expect(3);
         var req = this.client.call('GET', "http://localhost:80", function(err, res) {
