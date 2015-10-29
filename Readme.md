@@ -167,6 +167,7 @@ make a DELETE request.  For compatbility, can also be called as `del`.
   - auth: options for http basic auth
   - `defaults()` factory method
   - get, post, put, delete shortcuts
+  - fix: do not overwrite user-supplied Content-Type
 
 0.2.2
   - return body as third arg of callback
