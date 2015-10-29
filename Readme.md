@@ -86,7 +86,7 @@ Notable request options:
   [qhttp-agent](https://www.npmjs.com/package/qhttp-agent) for faster,
   more predictable connection agents.
 
-### httpClient.call( method, uri, [body], callback(err, res) )
+### httpClient.call( method, uri, [body], callback(err, res, body) )
 
 make a web request
 
