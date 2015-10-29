@@ -31,6 +31,15 @@ module.exports = {
         });
     },
 
+    'response should omit body if so requested': function(t) {
+        var req = this.client.call('GET', {url: "http://localhost:80", returnBody: false}, function(err, res, body) {
+            t.ifError(err);
+            t.equal(res.body, undefined);
+            t.equal(body, undefined);
+            t.done();
+        });
+    },
+
     'should return error on connect error': function(t) {
         this.client.call('GET', "http://localhost:1", function(err, res) {
             t.ok(err);

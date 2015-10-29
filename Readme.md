@@ -74,6 +74,7 @@ Options
 - `headers` - headers to pass to each request.  Additional headers may be passed at call time
 - `request` - http request function.  Default is `http.request`
 - `srequest` - https request function.  Default is `https.request`
+- `returnBody` - gather up the response body and return it in the callback (default `true`)
 
 The options are passed to `request()`, so in addition to the above HttpClient
 options, `request` options are also allowed.
