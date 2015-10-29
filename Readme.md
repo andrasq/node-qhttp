@@ -75,6 +75,7 @@ Options
 - `request` - http request function.  Default is `http.request`
 - `srequest` - https request function.  Default is `https.request`
 - `returnBody` - gather up the response body and return it in the callback (default `true`)
+- `auth` - http Basic authorization object containing `username` and `password`
 
 The options are passed to `request()`, so in addition to the above HttpClient
 options, `request` options are also allowed.
@@ -149,6 +150,17 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 - [agentkeepalive](https://www.npmjs.com/package/agentkeepalive) - like httpAgent, but much faster
 - [qhttp-agent](https://www.npmjs.com/package/qhttp-agent) - much faster httpAgent work-alike
 
+
+## ChangeLog
+
+0.3.0
+
+- HttpClient:
+  - returnBody:false option to not wait for response to arrive
+  - auth: options for http basic auth
+
+0.2.2
+  - return body as third arg of callback
 
 ## Todo
 

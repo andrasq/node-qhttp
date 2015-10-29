@@ -15,6 +15,19 @@ module.exports = {
         done();
     },
 
+    'should generate Authorization header from options.auth': function(t) {
+        var client = new HttpClient({ auth: {username: "user", password: "pass"} });
+        t.ok(client._options.headers.Authorization);
+        t.equal(client._options.headers.Authorization, "Basic "+new Buffer("user:pass").toString("base64"));
+        t.done()
+    },
+
+    'should ignore options.auth if it is a string': function(t) {
+        var client = new HttpClient({ auth: "user:pass" });
+        t.ok(!client._options.headers.Authorization);
+        t.done();
+    },
+
     'call should return request': function(t) {
         var req = this.client.call('GET', "http://localhost:80", function(err, res) { });
         t.ok(req instanceof http.ClientRequest);
