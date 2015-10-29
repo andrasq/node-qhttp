@@ -112,6 +112,13 @@ content-type 'text/plain'.  Object is json-encoded and sent as
             // res.body is the HTTP response body, in a Buffer
         });
 
+### httpClient.get
+### httpClient.post
+### httpClient.get
+### httpClient.delete
+
+Shortcuts to `httpClient.call('GET', ...)` etc., similar to `request`.
+
 ### HttpClient.emulateRestifyClient( client )
 ### httpClient.emulateRestifyClient( )
 
@@ -159,6 +166,7 @@ make a DELETE request.  For compatbility, can also be called as `del`.
   - returnBody:false option to not wait for response to arrive
   - auth: options for http basic auth
   - `defaults()` factory method
+  - get, post, put, delete shortcuts
 
 0.2.2
   - return body as third arg of callback

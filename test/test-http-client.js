@@ -59,6 +59,18 @@ module.exports = {
         });
     },
 
+    'should provide shortcuts': function(t) {
+        t.ok(typeof this.client.get === 'function');
+        t.ok(typeof this.client.post === 'function');
+        t.ok(typeof this.client.put === 'function');
+        t.ok(typeof this.client.delete === 'function');
+        var req = this.client.get("http://localhost:80", function(err, res) {
+            t.ifError(err);
+            t.ok(Buffer.isBuffer(res.body));
+            t.done();
+        });
+    },
+
     'should return error on connect error': function(t) {
         this.client.call('GET', "http://localhost:1", function(err, res) {
             t.ok(err);
