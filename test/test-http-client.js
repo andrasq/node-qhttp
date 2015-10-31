@@ -5,33 +5,88 @@
 
 'use strict';
 
+var net = require('net');
 var http = require('http');
+var Url = require('url');
 var HttpClient = require('../http-client');
 var EventEmitter = require('events').EventEmitter;
 
 module.exports = {
+    before: function(done) {
+        this.request = [];
+        this.reply = 'HTTP/1.1 200 OK\r\n\r\n{"reply":"body"}';
+        var self = this;
+        this.server = net.createServer(function connected(socket) {
+            socket.setNoDelay();
+            socket.on('data', function(chunk) {
+                self.request[0] = chunk.toString();
+                socket.write(self.reply);
+                socket.end();
+            });
+            socket.on('error', function(err) {
+                self.request = (err);
+            });
+        });
+        this.server.listen(1337);
+        done();
+    },
+
+    after: function(done) {
+        this.server.close();
+        done();
+    },
+
+    beforeEach: function(done) {
+        // FIXME: setting this.request does not work, before vs beforeEach use different objects ??
+        this.request.length = 0;
+        this.reply = 'HTTP/1.1 200 OK\r\n\r\n{"reply":"body"}';
+        done();
+    },
+
     setUp: function(done) {
         this.client = new HttpClient( { setNoDelay: true } );
         done();
     },
 
+    'should separate qhttp and http options': function(t) {
+        var client = new HttpClient({setNoDelay:'test', request:'test'});
+        t.equal(client._options.setNoDelay, undefined);
+        t.equal(client._options.request, 'test');
+        t.equal(client._httpOptions.setNoDelay, 'test');
+        t.equal(client._httpOptions.request, undefined);
+        t.done();
+    },
+
     'should generate Authorization header from options.auth': function(t) {
         var client = new HttpClient({ auth: {username: "user", password: "pass"} });
-        t.ok(client._options.headers.Authorization);
-        t.equal(client._options.headers.Authorization, "Basic "+new Buffer("user:pass").toString("base64"));
-        t.done()
+        var self = this;
+        client.get("http://localhost:1337?a=1", function(err, res) {
+            t.ok(self.request[0].indexOf('Authorization: Basic '+new Buffer("user:pass").toString("base64")) > 0);
+            t.done();
+        });
     },
 
     'should ignore options.auth if it is a string': function(t) {
         var client = new HttpClient({ auth: "user:pass" });
-        t.ok(!client._options.headers.Authorization);
-        t.done();
+        var self = this;
+        client.get("http://user:@localhost:1337?a=1#tag", function(err, res) {
+            t.ok(self.request[0].indexOf('Authorization: Basic '+new Buffer("user:pass").toString("base64")) < 0);
+            t.done();
+        });
     },
 
     'call should return request': function(t) {
-        var req = this.client.call('GET', "http://localhost:80", function(err, res) { });
+        var req = this.client.call('GET', "http://localhost:1337", function(err, res) { });
         t.ok(req instanceof http.ClientRequest);
         t.done();
+    },
+
+    'call should accept url in call options': function(t) {
+        var client = new HttpClient({url: "http://localhost:80"});
+        this.client.get({url: "http://localhost:1337"}, "body", function(err, res, body) {
+            t.equal(body.toString(), '{"reply":"body"}');
+            t.done();
+        });
     },
 
     'defaults factory method should construct client': function(t) {
@@ -42,7 +97,7 @@ module.exports = {
 
     'response should include Buffer body': function(t) {
         t.expect(3);
-        var req = this.client.call('GET', "http://localhost:80", function(err, res) {
+        var req = this.client.call('GET', "http://localhost:1337", function(err, res) {
             t.ifError(err);
             t.ok(res.body);
             t.ok(Buffer.isBuffer(res.body));
@@ -51,7 +106,7 @@ module.exports = {
     },
 
     'response should omit body if so requested': function(t) {
-        var req = this.client.call('GET', {url: "http://localhost:80", returnBody: false}, function(err, res, body) {
+        var req = this.client.call('GET', {url: "http://localhost:1337", returnBody: false}, function(err, res, body) {
             t.ifError(err);
             t.equal(res.body, undefined);
             t.equal(body, undefined);
@@ -59,14 +114,38 @@ module.exports = {
         });
     },
 
-    'should provide shortcuts': function(t) {
+    'should provide shortcuts for get/post etc': function(t) {
         t.ok(typeof this.client.get === 'function');
         t.ok(typeof this.client.post === 'function');
         t.ok(typeof this.client.put === 'function');
         t.ok(typeof this.client.delete === 'function');
-        var req = this.client.get("http://localhost:80", function(err, res) {
-            t.ifError(err);
+        t.done();
+    },
+
+    'should make https request': function(t) {
+        var self = this;
+        this.client.get("https://localhost:1337", function(err, res, body) {
+            t.ok(self.request[0]);
+            t.ok(self.request[0].indexOf('HTTP') < 0);
+            t.done();
+        });
+    },
+
+    'get should get': function(t) {
+        var self = this;
+        this.client.get("http://localhost:1337", function(err, res) {
             t.ok(Buffer.isBuffer(res.body));
+            t.equal(self.request[0].indexOf("GET / HTTP"), 0);
+            t.done();
+        });
+    },
+
+    'post should post': function(t) {
+        var self = this;
+        this.client.post("http://localhost:1337", {abc:1234}, function(err, res) {
+            t.ok(Buffer.isBuffer(res.body));
+            t.equal(self.request[0].indexOf("POST / HTTP"), 0);
+            t.ok(self.request[0].indexOf('{"abc":1234}') > 0);
             t.done();
         });
     },
@@ -113,7 +192,7 @@ module.exports = {
 
     'should reject two-argument form': function(t) {
         var ok = false;
-        try { this.client.call("http://localhost:80", function(err, res) { }); }
+        try { this.client.call("http://localhost:1337", function(err, res) { }); }
         catch (err) { ok = true; }
         t.ok(ok);
         t.done();
@@ -121,7 +200,7 @@ module.exports = {
 
     'should require a function callback': function(t) {
         var ok = false;
-        try { this.client.call('GET', "http://localhost:80", "body"); }
+        try { this.client.call('GET', "http://localhost:1337", "body"); }
         catch (err) { ok = true; }
         t.ok(ok);
         t.done();
@@ -141,7 +220,7 @@ module.exports = {
 
         'should return err,req,res,obj in callback': function(t) {
             t.expect(3);
-            this.client.get("http://localhost:80", function(err, req, res, obj) {
+            this.client.get("http://localhost:1337", function(err, req, res, obj) {
                 t.ok(req instanceof http.ClientRequest);
                 t.ok(res instanceof http.IncomingMessage);
                 t.ok(obj);
@@ -161,6 +240,84 @@ module.exports = {
                 t.ok(res.body.length);
                 t.done();
             });
+        },
+    },
+
+    'parseUrl': function(t) {
+        var parseUrl = require('../lib/parse-url.js');
+        var data = [
+            "http://host.com",
+            "http://host/path",
+            "http://host/path/name/?query=yes",
+            "http://host/path/name#hash",
+            "http://host/path/name?query#hash",
+            "http://host.com?a=1",
+            "http://host.com?a=1?b=2",
+            "http://host.com#tag",
+            "http://host.com#tag#tag2",
+            "https://user:pass@host.com:8080/path/name.php",
+            "http://host.com:8080/path/name?p=q",
+            "http://host.com?p=q#hashtag",
+            "https://host.name.com/path/name/?a=1&b=2&c=%20#tag1#tag2",
+            "https://host.name.com/path/name?a=1&b=2&c=%20#tag1#tag2",
+            "http://user@host/path",
+            "http://host?com",
+            "http://host/path",
+            "http://host//path",
+            "host/path",
+            "//host/path",
+            "ftp:host:80",
+            "ftp:host/path#tag",
+            "ftp://host:80#tag",
+            "//host/path",
+            "/",
+            "/path/name?query=1&b=2",
+            "/path#tag",
+            "/path/name/?query?two#tag#two",
+        ];
+        var uparts, qparts;
+        for (var i=0; i<data.length; i++) {
+            uparts = Url.parse(data[i]);
+            qparts = parseUrl(data[i]);
+            //console.log("AR: u", uparts); console.log("AR: q", qparts);
+            for (var j in uparts) if (typeof uparts[j] !== 'function') t.equal(qparts[j], uparts[j]);
+        }
+        t.done();
+    },
+
+    'throughput': {
+        'should run 100 calls': function(t) {
+            var ncalls = 1000;
+            var self = this;
+            (function loop() {
+                if (ncalls-- <= 0) return t.done();
+                self.client.get("http://localhost:1337", {a:1}, function(err, res, body) {
+                    loop();
+                });
+            })();
+            // 1k: 1800/sec, 10k: 2170/sec (url.parse: 1640/sec, 1960/sec)
+        },
+
+        '10k url.parse': function(t) {
+            var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
+            var parts;
+            for (var i=0; i<10000; i++) parts = Url.parse(url);
+            t.done();
+        },
+
+        '10k client._parseUrl': function(t) {
+            var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
+            var parts;
+            for (var i=0; i<10000; i++) parts = this.client._parseUrl(url);
+            t.done();
+        },
+
+        '10k parseUrl': function(t) {
+            var parseUrl = require('../lib/parse-url.js');
+            var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
+            var parts;
+            for (var i=0; i<10000; i++) parts = parseUrl(url);
+            t.done();
         },
     },
 };

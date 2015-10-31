@@ -76,9 +76,13 @@ Options
 - `srequest` - https request function.  Default is `https.request`
 - `returnBody` - gather up the response body and return it in the callback (default `true`)
 - `auth` - http Basic authorization object containing `username` and `password`
+  or authorization string in the form "username:password".  `user` and `pass` are also ok.
+- `parseUrl` - function to use for url string parsing.  Default is `require('qhttp/parse-url')`,
+  which parses only well-formatted urls in the form `http://user:pass@host:80/path?query#tag`
+  but is 20x faster than Url.parse and reduces overall round-trip call latency by 10%.
 
 The options are passed to `request()`, so in addition to the above HttpClient
-options, `request` options are also allowed.
+options, `request` options are also allowed.  Null and undefined values are ignored.
 
 Notable request options:
 
@@ -107,9 +111,9 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 
         HttpClient = require('qhttp/http-client');
         httpClient = new HttpClient();
-        httpClient.call('GET', "http://www.google.com", function(err, res) {
+        httpClient.call('GET', "http://www.google.com", function(err, res, body) {
             // res.statusCode is the HTTP response status code
-            // res.body is the HTTP response body, in a Buffer
+            // body == res.body is the HTTP response body, in a Buffer
         });
 
 ### httpClient.get
@@ -119,12 +123,18 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 
 Shortcuts to `httpClient.call('GET', ...)` etc., similar to `request`.
 
+        client = require('qhttp/http-client');
+        client.get("http://www.google.com", function(err, res, body) {
+            console.log(body.toString())
+        })
+
 ### HttpClient.emulateRestifyClient( client )
 ### httpClient.emulateRestifyClient( )
 
 Modify the `client` HttpClient object for improved `restify` compatbility.  New
-methods are added, error reporting changes, and the response message is
-decoded into an object.
+methods are added, error reporting changes, the response message is
+decoded into an object, and the get/post etc convenience methods callbacks
+are called with different arguments.
 
 The methods added to httpClient are:
 
@@ -168,6 +178,11 @@ make a DELETE request.  For compatbility, can also be called as `del`.
   - `defaults()` factory method
   - get, post, put, delete shortcuts
   - fix: do not overwrite user-supplied Content-Type
+  - fix: do not call callback twice if req error
+  - make unit tests standalone (do not hit localhost:80)
+  - expose module-level get, post, etc functions eg `require('qhttp/http-client').get(...)`
+- new `qhttp/parse-url` function
+- switch unit tests from nodeunit to qunit
 
 0.2.2
   - return body as third arg of callback
@@ -176,3 +191,4 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 - maybe have httpClient support streaming responses
 - `a[]=1&a[]=2` should be parsed into an array `[1, 2]` like in php
+- configure HttpClient decodeResponse function

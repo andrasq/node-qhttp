@@ -16,7 +16,7 @@
     "node": ">=0.0.0"
   },
   "scripts": {
-    "test": "nodeunit"
+    "test": "qunit"
   },
   "keywords": [
     "Andras",
@@ -29,6 +29,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "nodeunit": "*"
+    "qunit": "0.7"
   }
 }
