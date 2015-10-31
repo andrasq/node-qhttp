@@ -279,7 +279,7 @@ module.exports = {
         for (var i=0; i<data.length; i++) {
             uparts = Url.parse(data[i]);
             qparts = parseUrl(data[i]);
-            //console.log("AR: u", uparts); console.log("AR: q", qparts);
+            console.log("AR: u", uparts); console.log("AR: q", qparts);
             for (var j in uparts) if (typeof uparts[j] !== 'function') t.equal(qparts[j], uparts[j]);
         }
         t.done();

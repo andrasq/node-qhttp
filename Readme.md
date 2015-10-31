@@ -9,6 +9,7 @@ Included
 - `http_build_query` - convert parameter hashes to query strings
 - `http_parse_query` - convert query strings to parameter hashes
 - `HttpClient` - simple little web request caller
+- `parseUrl` - fast http url parser
 
         npm install qhttp
         npm test qhttp
@@ -63,6 +64,37 @@ Todo: flat numerical hierarchies should be converted to arrays, not objects..
 Currently `a[0]=1&a[1]=2` parses a into the object `{'0':1, '1':2}` and not
 `[1, 2]`.  This is not symmetric with http_build_query() behavior.
 
+
+### parseUrl( url )
+
+parse simple URL strings the way `url.parse` does, but 20x faster.
+The parsed results are returned in a hash (without the url.parse functions),
+and all fields set by url.parse are set to the same values as by url.parse.
+The urls should be of the form `(protocol) // (auth) (host) (path) (search) (hash)`
+or `(path)(search)(hash)`, eg. "http://user:pass@example.com:80/path/name?a=1&b=2#tag1"
+- protocol: `http:` or `https:` (http:)
+- auth: `user@` or `user:password@` (user:pass)
+- host: the first word between the `//` and next `/` (example.com:80)
+- path: the trailing end of the url string, not including the hash (/path/name?a=1&b=2)
+- search: the portion of the string from the first '?' to the hash (?a=1&b=2)
+- hash: the portion of the string from the first '#' to the end (#tag1)
+
+In addition to the above fields, url.parse and parseUrl also separate
+- hostname: host without the port (example.com)
+- port: host port (80)
+- username: user part of auth (user) (parseUrl only, not url.parse)
+- password: password part of auth (pass) (parseUrl only, not url.parse)
+- query: search without the leading '?' (a=1&b=2)
+- pathname: path without the search component (/path/name)
+- href: the normalized url string, from protocol to hash.  This is often
+  the same as the input url, but can differ if eg no path was specified
+  `"http://host.com?a=1"` => `"http://host.com/?a=1"`.
+
+        var parseUrl = require('qhttp/parse-url');
+        var url = "http://usr:pwd@example.com80/path/name?query=yes#tag";
+        var parts = parseUrl(url);
+        // => { host: 'example.com:80', hostname: 'example.com', port: '80',
+        //      auth: 'usr:pwd', hash: '#tag', query: 'query=yes' }
 
 ### new HttpClient( options )
 
