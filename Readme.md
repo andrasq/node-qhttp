@@ -15,6 +15,24 @@ Included
         npm test qhttp
 
 
+## Package
+
+The package exports a pre-constructed qhttp client object with methods get, post,
+put and delete, as well as several helper functions.
+
+Exported functions:
+- `call`, `get`, `post`, `put`, `delete`: make web requests using the qhttp singleton, see `HttpClient` below
+- `create`: HttpClient factory for creating new pre-configured HttpClient objects.  Also available as `defaults`.
+- `http_build_query`: construct a query string from parts
+- `http_parse_query`: parse a query string into its parts
+- `parseUrl`: fast url.parse work-alike for http urls
+- `emulateRestifyClient(client)`: decorate client with some `restify` jsonClient methods and semantics
+
+        var qhttp = require('qhttp');
+        qhttp.get("http://example.com", function(err, res, body) {
+            console.log(body);
+        });
+
 ## Functions
 
 ### http_build_query( objectOrArray, [options] )
@@ -96,13 +114,26 @@ In addition to the above fields, url.parse and parseUrl also separate
         // => { host: 'example.com:80', hostname: 'example.com', port: '80',
         //      auth: 'usr:pwd', hash: '#tag', query: 'query=yes' }
 
+### create( options )
+
+Return a newly constructed HttpClient object preconfigured with the given options.
+See `HttpClient` below.  Also available as `defaults(options)` for `request` compatibility.
+
+### get( url, body, callback(err, res, body) )
+### post( url, body, callback(err, res, body) )
+### put( url, body, callback(err, res, body) )
+### delete( url, body, callback(err, res, body) )
+
+Convenience web request methods using the `qhttp` built-in singleton.
+
 ### new HttpClient( options )
 
 web request runner, built on top of `http.request`
 
 Options
 
-- `url` - base url to call.  A call to a bare path `/rest/path` will be appended to the base url
+- `url` - base url to call, eg "http://host.com".  A call to a bare path `/rest/path`
+  will be combined with the base url to form "http://host.com/rest/path" for the request.
 - `headers` - headers to pass to each request.  Additional headers may be passed at call time
 - `request` - http request function.  Default is `http.request`
 - `srequest` - https request function.  Default is `https.request`
@@ -141,6 +172,9 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 'application/json'.  Buffer is sent as binary data as type
 'application/octet-stream'.
 
+The call always sets `Content-Type` to match the body (unless already set),
+and `Content-Length`.
+
         HttpClient = require('qhttp/http-client');
         httpClient = new HttpClient();
         httpClient.call('GET', "http://www.google.com", function(err, res, body) {
@@ -150,7 +184,7 @@ content-type 'text/plain'.  Object is json-encoded and sent as
 
 ### httpClient.get
 ### httpClient.post
-### httpClient.get
+### httpClient.put
 ### httpClient.delete
 
 Shortcuts to `httpClient.call('GET', ...)` etc., similar to `request`.
@@ -161,7 +195,7 @@ Shortcuts to `httpClient.call('GET', ...)` etc., similar to `request`.
         })
 
 ### HttpClient.emulateRestifyClient( client )
-### httpClient.emulateRestifyClient( )
+### client.emulateRestifyClient( )
 
 Modify the `client` HttpClient object for improved `restify` compatbility.  New
 methods are added, error reporting changes, the response message is
@@ -201,6 +235,14 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 
 ## ChangeLog
+
+0.4.0
+
+- have the package export a `qhttp` singleton with methods `get`, `post`, etc
+- fix Content-Length for multi-byte utf8 characters
+- fix header handling to not clobber pre-configured headers at call time
+- `create()` factory method (aka `defaults`)
+- expose singleton `call` method
 
 0.3.0
 

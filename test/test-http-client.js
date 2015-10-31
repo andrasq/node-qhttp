@@ -11,6 +11,8 @@ var Url = require('url');
 var HttpClient = require('../http-client');
 var EventEmitter = require('events').EventEmitter;
 
+var qhttp = require('../index');
+
 module.exports = {
     before: function(done) {
         this.request = [];
@@ -36,16 +38,31 @@ module.exports = {
         done();
     },
 
-    beforeEach: function(done) {
-        // FIXME: setting this.request does not work, before vs beforeEach use different objects ??
+    setUp: function(done) {
         this.request.length = 0;
-        this.reply = 'HTTP/1.1 200 OK\r\n\r\n{"reply":"body"}';
+        this.client = new HttpClient( { setNoDelay: true } );
         done();
     },
 
-    setUp: function(done) {
-        this.client = new HttpClient( { setNoDelay: true } );
-        done();
+    'qhttp module': {
+        'should export singleton call method': function(t) {
+            var self = this;
+            qhttp.call('METHOD / HTTP', "http://localhost:1337", function(err) {
+                t.ifError(err);
+console.log(self.request);
+                t.equal(self.request[0].indexOf('METHOD '), 0);
+                t.done();
+            })
+        },
+
+        'should export singleton convenience methods': function(t) {
+            var self = this;
+            qhttp.post("http://localhost:1337", function(err, res, body) {
+                t.ok(self.request[0].indexOf('POST / HTTP') === 0);
+                t.equal(body, '{"reply":"body"}');
+                t.done();
+            });
+        },
     },
 
     'should separate qhttp and http options': function(t) {
@@ -62,6 +79,16 @@ module.exports = {
         var self = this;
         client.get("http://localhost:1337?a=1", function(err, res) {
             t.ok(self.request[0].indexOf('Authorization: Basic '+new Buffer("user:pass").toString("base64")) > 0);
+            t.done();
+        });
+    },
+
+    'should merge pre-configured headers with call-time headers': function(t) {
+        var client = qhttp.defaults({ auth: {user: "user", pass: "pass" } });
+        var self = this;
+        client.get({url: "http://localhost:1337", headers: {custom: 'true'}}, function(err, res, body) {
+            t.ok(self.request[0].indexOf("Authorization: Basic ") > 0);
+            t.ok(self.request[0].indexOf("custom: true\r\n") > 0);
             t.done();
         });
     },
@@ -279,7 +306,7 @@ module.exports = {
         for (var i=0; i<data.length; i++) {
             uparts = Url.parse(data[i]);
             qparts = parseUrl(data[i]);
-            console.log("AR: u", uparts); console.log("AR: q", qparts);
+            //console.log("AR: u", uparts); console.log("AR: q", qparts);
             for (var j in uparts) if (typeof uparts[j] !== 'function') t.equal(qparts[j], uparts[j]);
         }
         t.done();
