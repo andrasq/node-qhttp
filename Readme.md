@@ -71,7 +71,7 @@ parse simple URL strings the way `url.parse` does, but 20x faster.
 The parsed results are returned in a hash (without the url.parse functions),
 and all fields set by url.parse are set to the same values as by url.parse.
 The urls should be of the form `(protocol) // (auth) (host) (path) (search) (hash)`
-or `(path)(search)(hash)`, eg. "http://user:pass@example.com:80/path/name?a=1&b=2#tag1"
+or `(path)(search)(hash)`, eg. `"http://user:pass@example.com:80/path/name?a=1&b=2#tag1"`
 - protocol: `http:` or `https:` (http:)
 - auth: `user@` or `user:password@` (user:pass)
 - host: the first word between the `//` and next `/` (example.com:80)
