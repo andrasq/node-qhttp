@@ -72,21 +72,21 @@ The parsed results are returned in a hash (without the url.parse functions),
 and all fields set by url.parse are set to the same values as by url.parse.
 The urls should be of the form `(protocol) // (auth) (host) (path) (search) (hash)`
 or `(path)(search)(hash)`, eg. `"http://user:pass@example.com:80/path/name?a=1&b=2#tag1"`
-- protocol: `http:` or `https:` (http:)
-- auth: `user@` or `user:password@` (user:pass)
-- host: the first word between the `//` and next `/` (example.com:80)
-- path: the trailing end of the url string, not including the hash (/path/name?a=1&b=2)
-- search: the portion of the string from the first '?' to the hash (?a=1&b=2)
-- hash: the portion of the string from the first '#' to the end (#tag1)
+- `protocol`: `http:` or `https:` (http:)
+- `auth`: `user@` or `user:password@` (user:pass)
+- `host`: the non-auth string after the `//` and before the first `/` (example.com:80)
+- `path`: the trailing end of the url string, not including the hash (/path/name?a=1&b=2)
+- `search`: the portion of the string from the first '?' to the hash (?a=1&b=2)
+- `hash`: the portion of the string from the first '#' to the end (#tag1)
 
 In addition to the above fields, url.parse and parseUrl also separate
-- hostname: host without the port (example.com)
-- port: host port (80)
-- username: user part of auth (user) (parseUrl only, not url.parse)
-- password: password part of auth (pass) (parseUrl only, not url.parse)
-- query: search without the leading '?' (a=1&b=2)
-- pathname: path without the search component (/path/name)
-- href: the normalized url string, from protocol to hash.  This is often
+- `hostname`: host without the port (example.com)
+- `port`: host port (80)
+- `username`: user part of auth (user) (parseUrl only, not url.parse)
+- `password`: password part of auth (pass) (parseUrl only, not url.parse)
+- `query`: search without the leading '?' (a=1&b=2)
+- `pathname`: path without the search component (/path/name)
+- `href`: the normalized url string, from protocol to hash.  This is often
   the same as the input url, but can differ if eg no path was specified
   `"http://host.com?a=1"` => `"http://host.com/?a=1"`.
 
