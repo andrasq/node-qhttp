@@ -40,7 +40,7 @@ module.exports = {
 
     setUp: function(done) {
         this.request.length = 0;
-        this.client = new HttpClient( { setNoDelay: true } );
+        this.client = new HttpClient();
         done();
     },
 
@@ -49,7 +49,6 @@ module.exports = {
             var self = this;
             qhttp.call('METHOD / HTTP', "http://localhost:1337", function(err) {
                 t.ifError(err);
-console.log(self.request);
                 t.equal(self.request[0].indexOf('METHOD '), 0);
                 t.done();
             })
@@ -174,6 +173,17 @@ console.log(self.request);
             t.equal(self.request[0].indexOf("POST / HTTP"), 0);
             t.ok(self.request[0].indexOf('{"abc":1234}') > 0);
             t.done();
+        });
+    },
+
+    'should set correct Content-Length': function(t) {
+        var self = this;
+        this.client.get("http://localhost:1337", "\x80\xff", function(err) {
+            t.ok(self.request[0].indexOf("Content-Length: 4\r\n") > 0);
+            self.client.get("http://localhost:1337", {a:"\x80\xff"}, function(err) {
+                t.ok(self.request[0].indexOf("Content-Length: 12\r\n") > 0);
+                t.done();
+            });
         });
     },
 
@@ -314,7 +324,7 @@ console.log(self.request);
 
     'throughput': {
         'should run 100 calls': function(t) {
-            var ncalls = 1000;
+            var ncalls = 100;
             var self = this;
             (function loop() {
                 if (ncalls-- <= 0) return t.done();
@@ -322,13 +332,15 @@ console.log(self.request);
                     loop();
                 });
             })();
-            // 1k: 1800/sec, 10k: 2170/sec (url.parse: 1640/sec, 1960/sec)
+            // 1k: 1800/sec, 10k: 2170/sec (using url.parse: 1640/sec, 1960/sec)
+            // request: 1k: 1025/sec
         },
 
         '10k url.parse': function(t) {
             var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
             var parts;
             for (var i=0; i<10000; i++) parts = Url.parse(url);
+            // 10k: .24 sec
             t.done();
         },
 
@@ -336,6 +348,7 @@ console.log(self.request);
             var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
             var parts;
             for (var i=0; i<10000; i++) parts = this.client._parseUrl(url);
+            // 10k: .011 sec
             t.done();
         },
 
@@ -344,6 +357,7 @@ console.log(self.request);
             var url = "http://user:pass@host.com/path/to/file.php?a=1&b=2#tag";
             var parts;
             for (var i=0; i<10000; i++) parts = parseUrl(url);
+            // 10k: .010 sec
             t.done();
         },
     },

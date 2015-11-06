@@ -124,7 +124,7 @@ See `HttpClient` below.  Also available as `defaults(options)` for `request` com
 ### put( url, body, callback(err, res, body) )
 ### delete( url, body, callback(err, res, body) )
 
-Convenience web request methods using the `qhttp` built-in singleton.
+Convenience web request calls using the built-in singleton.
 
 ### new HttpClient( options )
 
