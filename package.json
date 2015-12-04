@@ -1,7 +1,7 @@
 {
   "name": "qhttp",
   "version": "0.4.2",
-  "description": "http_build_query, http_parse_query, HttpClient, parseUrl",
+  "description": "quicker, simpler http request client",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -23,8 +23,10 @@
     "http",
     "http_build_query",
     "http_parse_query",
-    "http-client",
-    "parse-url",
+    "qhttp",
+    "parseUrl",
+    "restify",
+    "request",
     "client"
   ],
   "dependencies": {

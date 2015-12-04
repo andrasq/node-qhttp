@@ -1,15 +1,15 @@
 qhttp
 =====
 
-
-A few useful http utilities for making web requests.
+Simple, fast, low overhead utility for making http requests.  Similar to `request`
+and, optionally, `restify` jsonClient, but 2x faster making back-to-back calls.
 
 Included
 
+- `HttpClient` - quick little web request caller
+- `parseUrl` - fast http url parser, 18x faster than `url.parse`
 - `http_build_query` - convert parameter hashes to query strings
 - `http_parse_query` - convert query strings to parameter hashes
-- `HttpClient` - simple little web request caller
-- `parseUrl` - fast http url parser
 
         npm install qhttp
         npm test qhttp
@@ -137,7 +137,9 @@ Options
 - `headers` - headers to pass to each request.  Additional headers may be passed at call time
 - `request` - http request function.  Default is `http.request`
 - `srequest` - https request function.  Default is `https.request`
-- `returnBody` - gather up the response body and return it in the callback (default `true`)
+- `returnBody` - gather up the response body and return it in the callback (default `true`).
+  If set to `false`, the web request callbacks will get just the `res` response object, which
+  can then be gathered or piped by the caller.
 - `auth` - http Basic authorization object containing `username` and `password`
   or authorization string in the form "username:password".  `user` and `pass` are also ok.
 - `parseUrl` - function to use for url string parsing.  Default is `require('qhttp/parse-url')`,
