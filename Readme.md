@@ -1,8 +1,11 @@
 qhttp
 =====
 
-Simple, fast, low overhead utility for making http requests.  Similar to `request`
-and, optionally, `restify` jsonClient, but 2x faster making back-to-back calls.
+Simple, fast, low overhead utility for making http requests.
+
+A convenience wrapper to simplify using `http` but keep the common use cases fast.
+Similar to `request`, but without the added complexity and 2x faster making
+back-to-back calls.
 
 Included
 
