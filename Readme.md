@@ -236,6 +236,10 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 ## ChangeLog
 
+0.4.2
+
+- fix dev dependency name
+
 0.4.0
 
 - have the package export a `qhttp` singleton with methods `get`, `post`, etc
