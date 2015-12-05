@@ -7,6 +7,11 @@ A convenience wrapper to simplify using `http` but keep the common use cases fas
 Similar to `request`, but without the added complexity and 2x faster making
 back-to-back calls.
 
+QHttp auto-detects the request body and encodes it accordingly:  strings as-is as
+`text/plain`, Buffers as-is as `application/octet-stream`, all else encoded with
+JSON.stringify as `application/json`.  The response is not decoded, it is returned
+in a Buffer (or left to the caller; see below).
+
 Included
 
 - `HttpClient` - quick little web request caller

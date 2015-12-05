@@ -16,11 +16,13 @@ var qhttp = require('../index');
 module.exports = {
     before: function(done) {
         this.request = [];
+        this.requestBinary = [];
         this.reply = 'HTTP/1.1 200 OK\r\n\r\n{"reply":"body"}';
         var self = this;
         this.server = net.createServer(function connected(socket) {
             socket.setNoDelay();
             socket.on('data', function(chunk) {
+                self.requestBinary[0] = chunk;
                 self.request[0] = chunk.toString();
                 socket.write(self.reply);
                 socket.end();
@@ -174,6 +176,19 @@ module.exports = {
             t.ok(self.request[0].indexOf('{"abc":1234}') > 0);
             t.done();
         });
+    },
+
+    'post should post binary': function(t) {
+        var self = this;
+        var body = new Buffer(1024);
+        for (var i=0; i<body.length; i++) body[i] = i;
+        this.client.post("http://localhost:1337", body, function(err, res) {
+            // http headers are 7-bit ascii, index of blank line is same in the Buffer
+            var blankLine = self.request[0].indexOf('\r\n\r\n');
+            var sent = self.requestBinary[0].slice(blankLine + 4);
+            t.deepEqual(sent, body);
+            t.done();
+        })
     },
 
     'should set correct Content-Length': function(t) {
