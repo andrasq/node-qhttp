@@ -246,9 +246,10 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 ## ChangeLog
 
-0.4.2
+0.5.0
 
 - fix dev dependency name
+- accept the body parameter from the uri object as well
 
 0.4.0
 

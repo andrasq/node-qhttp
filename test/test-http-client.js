@@ -191,6 +191,32 @@ module.exports = {
         })
     },
 
+    'should post to relative path': function(t) {
+        var self = this;
+        var client = HttpClient.defaults({url: 'http://localhost:1337'});
+        client.post("/", {abc:12345}, function(err, res) {
+            t.ok(self.request[0].indexOf('{"abc":12345}') > 0);
+            t.done();
+        });
+    },
+
+    'should take body from uri': function(t) {
+        var self = this;
+        this.client.post({url: 'http://localhost:1337', body: {abc:1234}}, function(err, res) {
+            t.ok(self.request[0].indexOf('{"abc":1234}') > 0);
+            t.done();
+        });
+    },
+
+    'should take body from arguments over uri': function(t) {
+        var self = this;
+        this.client.post({url: 'http://localhost:1337', body: {abc:1234}}, {abc:12345}, function(err, res) {
+            t.ok(self.request[0].indexOf('{"abc":1234}') < 0);
+            t.ok(self.request[0].indexOf('{"abc":12345}') > 0);
+            t.done();
+        });
+    },
+
     'should set correct Content-Length': function(t) {
         var self = this;
         this.client.get("http://localhost:1337", "\x80\xff", function(err) {
