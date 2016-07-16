@@ -1,1 +1,1 @@
-require('./lib/parse-url.js');
+module.exports = require('./lib/parse-url.js');

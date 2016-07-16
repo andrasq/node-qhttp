@@ -93,7 +93,7 @@ Currently `a[0]=1&a[1]=2` parses a into the object `{'0':1, '1':2}` and not
 
 ### parseUrl( url )
 
-parse simple URL strings the way `url.parse` does, but 20x faster.
+parse simple URL strings the way `url.parse` does, but 4x faster.
 The parsed results are returned in a hash (without the url.parse functions),
 and all fields set by url.parse are set to the same values as by url.parse.
 The urls should be of the form `(protocol) // (auth) (host) (path) (search) (hash)`
@@ -152,7 +152,7 @@ Options
   or authorization string in the form "username:password".  `user` and `pass` are also ok.
 - `parseUrl` - function to use for url string parsing.  Default is `require('qhttp/parse-url')`,
   which parses only well-formatted urls in the form `http://user:pass@host:80/path?query#tag`
-  but is 20x faster than Url.parse and reduces overall round-trip call latency by 10%.
+  but is 4x faster than Url.parse and reduces overall round-trip call latency by 10%.
 
 The options are passed to `request()`, so in addition to the above HttpClient
 options, `request` options are also allowed.  Null and undefined values are ignored.
@@ -237,6 +237,7 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 ## Related Work
 
+- [qhttp/parseUrl](https://www.npmjs.com/package/qhttp) - like url.parse, but 4x faster
 - [querystringparser](https://www.npmjs.com/package/querystringparser) - like qs, but much faster
 - [fast-url-parser](https://www.npmjs.com/package/fast-url-parser) - like url.parse, but 2x faster
 - [cookieparser](https://www.npmjs.com/package/cookieparser)
@@ -245,6 +246,10 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 
 ## ChangeLog
+
+0.5.1
+
+- fix parseUrl export
 
 0.5.0
 
