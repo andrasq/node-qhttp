@@ -49,9 +49,9 @@ module.exports = {
     'qhttp module': {
         'should export singleton call method': function(t) {
             var self = this;
-            qhttp.call('METHOD / HTTP', "http://localhost:1337", function(err) {
+            qhttp.call('METHOD_HTTP', "http://localhost:1337", function(err) {
                 t.ifError(err);
-                t.equal(self.request[0].indexOf('METHOD '), 0);
+                t.equal(self.request[0].indexOf('METHOD'), 0);
                 t.done();
             })
         },
