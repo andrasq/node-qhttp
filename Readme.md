@@ -247,6 +247,10 @@ make a DELETE request.  For compatbility, can also be called as `del`.
 
 ## ChangeLog
 
+0.6.0
+- encode dates as toISOString
+- encode only array contents, not array properties
+
 0.5.1
 
 - fix parseUrl export
