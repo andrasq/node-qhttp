@@ -3,20 +3,18 @@
   "version": "0.6.0",
   "description": "quicker, simpler http request client",
   "license": "Apache-2.0",
+  "main": "index.js",
+
   "repository": {
     "type": "git",
     "url": "git://github.com/andrasq/node-qhttp"
   },
-  "main": "index.js",
   "author": {
     "name": "Andras",
     "url": "http://github.com/andrasq"
   },
   "engines": {
     "node": ">=0.0.0"
-  },
-  "scripts": {
-    "test": "qnit"
   },
   "keywords": [
     "Andras",
@@ -29,9 +27,16 @@
     "request",
     "client"
   ],
+
   "dependencies": {
   },
   "devDependencies": {
     "qnit": "0.13"
+  },
+
+  "scripts": {
+    "test": "qnit",
+    "coverage": "nyc -r lcov -r text npm test",
+    "clean": "rm -rf .nyc_output coverage"
   }
 }
