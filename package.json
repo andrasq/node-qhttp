@@ -1,6 +1,6 @@
 {
   "name": "qhttp",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "quicker, simpler http request client",
   "license": "Apache-2.0",
   "main": "index.js",

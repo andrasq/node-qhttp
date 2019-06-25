@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Andras Radics
+ * Copyright (C) 2015,2019 Andras Radics
  * Licensed under the Apache License, Version 2.0
  */
 
@@ -83,4 +83,32 @@ module.exports = {
         t.deepEqual(params, {a:1, b:2});
         t.done();
     },
+
+    'should decode + as space': function(t) {
+        var params = http_parse_query("a=1&&b=2+3");
+        t.deepEqual(params, {a:1, b:'2 3'});
+        t.done();
+    },
+
+    'urldecode': {
+        'should parse + into space': function(t) {
+            t.equal(http_parse_query.urldecode("a+b&c"), "a b&c");
+            t.done();
+        },
+
+        'should parse all %-encoded ascii chars': function(t) {
+            var encoded = '', plain = '';
+            // note: decodeURI* reject 8-bit chars, non-ascii chars must be encoded in multi-byte utf8 form
+            for (var i=0; i<128; i++) {
+                plain += String.fromCharCode(i);
+                encoded += '%' + pad2(i.toString(16));
+            }
+            t.equal(http_parse_query.urldecode(encoded), plain);
+            t.done();
+        },
+    },
 };
+
+function pad2( n ) {
+    return n.length < 2 ? '0' + n : n;
+}
