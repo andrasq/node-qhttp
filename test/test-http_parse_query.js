@@ -85,14 +85,14 @@ module.exports = {
     },
 
     'should decode + as space': function(t) {
-        var params = http_parse_query("a=1&&b=2+3");
-        t.deepEqual(params, {a:1, b:'2 3'});
+        var params = http_parse_query("a=1&&b=2+3+4");
+        t.deepEqual(params, {a:1, b:'2 3 4'});
         t.done();
     },
 
     'urldecode': {
         'should parse + into space': function(t) {
-            t.equal(http_parse_query.urldecode("a+b&c"), "a b&c");
+            t.equal(http_parse_query.urldecode("a+b+c&d"), "a b c&d");
             t.done();
         },
 
